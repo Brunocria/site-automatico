@@ -1,6 +1,6 @@
 """
 Gera um site estático simples (uma página) para cada lead com status "novo",
-usando os dados coletados do Google Places.
+usando os dados coletados (Google Places, OpenStreetMap ou cadastro manual).
 
 Uso:
     python site_generator/generate_site.py
@@ -34,17 +34,33 @@ def _whatsapp_link(e164_digits, texto=""):
     return link
 
 
+def _osm_embed_src(lat, lon, delta=0.003):
+    lat, lon = float(lat), float(lon)
+    bbox = f"{lon - delta},{lat - delta},{lon + delta},{lat + delta}"
+    return f"https://www.openstreetmap.org/export/embed.html?bbox={bbox}&marker={lat},{lon}"
+
+
 def generate_site_for_lead(lead):
     place_id = lead["place_id"]
-    details = get_place_details(place_id) if GOOGLE_PLACES_API_KEY else {}
-    opening_hours = (details or {}).get("opening_hours", {}).get("weekday_text", [])
+    is_google_place = GOOGLE_PLACES_API_KEY and not place_id.startswith(("osm:", "manual:"))
+
+    opening_hours = []
+    maps_embed_src = ""
+
+    if is_google_place:
+        details = get_place_details(place_id) or {}
+        opening_hours = details.get("opening_hours", {}).get("weekday_text", [])
+        maps_embed_src = f"https://www.google.com/maps/embed/v1/place?key={GOOGLE_PLACES_API_KEY}&q=place_id:{place_id}"
+    else:
+        # Lead veio do OpenStreetMap (ou de cadastro manual): usa os dados
+        # já coletados no leads.csv, sem depender de nenhuma chave de API.
+        if lead.get("opening_hours_raw"):
+            opening_hours = [h.strip() for h in lead["opening_hours_raw"].split(";") if h.strip()]
+        if lead.get("lat") and lead.get("lon"):
+            maps_embed_src = _osm_embed_src(lead["lat"], lead["lon"])
 
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
     template = env.get_template("template.html")
-
-    maps_embed_src = ""
-    if GOOGLE_PLACES_API_KEY:
-        maps_embed_src = f"https://www.google.com/maps/embed/v1/place?key={GOOGLE_PLACES_API_KEY}&q=place_id:{place_id}"
 
     html = template.render(
         name=lead["name"],

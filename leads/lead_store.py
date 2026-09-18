@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 
 FIELDNAMES = [
     "place_id",
+    "source",
     "name",
     "address",
     "city",
@@ -12,6 +13,9 @@ FIELDNAMES = [
     "rating",
     "user_ratings_total",
     "maps_url",
+    "lat",
+    "lon",
+    "opening_hours_raw",
     "site_slug",
     "site_path",
     "status",
