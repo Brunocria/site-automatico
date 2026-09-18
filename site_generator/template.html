@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ name }}{% if city %} - {{ city }}{% endif %}</title>
+<style>
+  :root {
+    --brand: #d62828;
+    --dark: #1c1c1c;
+    --bg: #fafafa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--dark); line-height: 1.5; }
+  header.hero {
+    background: linear-gradient(135deg, var(--brand), #a11d1d);
+    color: #fff;
+    padding: 56px 20px;
+    text-align: center;
+  }
+  header.hero h1 { font-size: 2rem; margin-bottom: 8px; }
+  header.hero p { font-size: 1.05rem; opacity: 0.95; }
+  .whatsapp-btn {
+    display: inline-block;
+    margin-top: 20px;
+    background: #25D366;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  }
+  .whatsapp-btn:hover { filter: brightness(0.95); }
+  main { max-width: 720px; margin: 0 auto; padding: 32px 20px; }
+  section { margin-bottom: 32px; }
+  section h2 { font-size: 1.3rem; margin-bottom: 12px; border-bottom: 2px solid var(--brand); display: inline-block; padding-bottom: 4px; }
+  .info-item { margin-bottom: 8px; }
+  .info-item strong { color: var(--brand); }
+  .rating { color: #f2a900; font-weight: 600; }
+  .cardapio-placeholder {
+    background: #fff;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    color: #777;
+  }
+  .cardapio-item { background: #fff; border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+  iframe.mapa { width: 100%; height: 280px; border: 0; border-radius: 8px; }
+  footer { text-align: center; padding: 28px 20px; background: #fff; border-top: 1px solid #eee; }
+  .sell-banner {
+    background: #fff3cd;
+    border: 1px solid #ffe08a;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    margin: 24px auto;
+    max-width: 720px;
+    font-size: 0.95rem;
+  }
+  .sell-banner a { color: var(--brand); font-weight: 700; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>{{ name }}</h1>
+  {% if address %}<p>{{ address }}</p>{% endif %}
+  {% if whatsapp_link %}
+  <a class="whatsapp-btn" href="{{ whatsapp_link }}" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+  {% endif %}
+</header>
+
+<main>
+  <section>
+    <h2>Informações</h2>
+    {% if address %}<div class="info-item"><strong>Endereço:</strong> {{ address }}</div>{% endif %}
+    {% if phone_display %}<div class="info-item"><strong>Telefone:</strong> {{ phone_display }}</div>{% endif %}
+    {% if rating %}<div class="info-item rating">★ {{ rating }} {% if user_ratings_total %}({{ user_ratings_total }} avaliações){% endif %}</div>{% endif %}
+    {% if opening_hours %}
+    <div class="info-item"><strong>Horário de funcionamento:</strong></div>
+    <ul>
+      {% for linha in opening_hours %}<li>{{ linha }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+  </section>
+
+  <section>
+    <h2>Cardápio</h2>
+    {% if cardapio_items %}
+      {% for item in cardapio_items %}
+      <div class="cardapio-item"><span>{{ item.nome }}</span>{% if item.preco %}<span>{{ item.preco }}</span>{% endif %}</div>
+      {% endfor %}
+    {% else %}
+      <div class="cardapio-placeholder">
+        Cardápio em breve. <a href="{{ whatsapp_link }}" target="_blank" rel="noopener">Chame no WhatsApp</a> para saber mais.
+      </div>
+    {% endif %}
+  </section>
+
+  {% if maps_embed_src %}
+  <section>
+    <h2>Localização</h2>
+    <iframe class="mapa" loading="lazy" src="{{ maps_embed_src }}" allowfullscreen></iframe>
+  </section>
+  {% endif %}
+</main>
+
+<div class="sell-banner">
+  Site de demonstração gratuito criado por <strong>{{ seu_nome }}</strong>.
+  Quer deixar este site no ar por apenas R$ {{ preco }}? Fale comigo:
+  <a href="{{ seu_whatsapp_link }}" target="_blank" rel="noopener">clique aqui</a>.
+</div>
+
+<footer>
+  <p>{{ name }} &middot; feito com ❤️ por {{ seu_nome }}</p>
+</footer>
+
+</body>
+</html>

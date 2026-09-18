@@ -1,0 +1,11 @@
+Oi! Tudo bem? Sou {seu_nome} 👋
+
+Vi que a {nome_negocio} ainda não tem site próprio, então já criei um de demonstração
+pra vocês, de graça, pra você ver como fica:
+
+{link_site}
+
+Se curtir, deixo esse site no ar (com domínio, hospedagem e acesso total pra vocês
+mexerem quando quiserem) por apenas R$ {preco}, sem mensalidade.
+
+Quer que eu deixe no ar? É só me responder por aqui 🙂

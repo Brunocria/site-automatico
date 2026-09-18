@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+
+# Dados de leads contêm informações pessoais (nome, telefone) — não versionar
+leads/leads.csv
+outreach/prontos_para_enviar.csv
+
+# Sites gerados (saída, não código-fonte)
+sites/*
+!sites/.gitkeep
